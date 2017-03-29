@@ -20,8 +20,12 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.vue', '.scss'],
-    fallback: [path.join(__dirname, '../node_modules')],
+    extensions: [ '.js', '.vue', '.scss'],
+    //fallback: [path.join(__dirname, '../node_modules')],
+	 modules: [
+     path.join(__dirname, "src"),
+     "node_modules"
+   ],
     alias: {
       'vue$': 'vue/dist/vue',
       'src': path.resolve(__dirname, '../src'),
@@ -30,28 +34,34 @@ module.exports = {
       'scss_vars': path.resolve(__dirname, '../src/styles/vars.scss')
     }
   },
-  resolveLoader: {
-    fallback: [path.join(__dirname, '../node_modules')]
-  },
+//  resolveLoader: {
+//    fallback: [path.join(__dirname, '../node_modules')]
+//  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
+		options: {
+          loaders: {
+             scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
+      			sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax' // <style lang="sass">
+          }
+        }
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: projectRoot,
         exclude: /node_modules/
       },
       {
-        test: /\.json$/,
-        loader: 'json'
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -59,7 +69,7 @@ module.exports = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
@@ -67,12 +77,12 @@ module.exports = {
       }
     ]
   },
-  vue: {
-    loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
-    postcss: [
-      require('autoprefixer')({
-        browsers: ['last 2 versions']
-      })
-    ]
-  }
+//  vue: {
+//    loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
+//    postcss: [
+//      require('autoprefixer')({
+//        browsers: ['last 2 versions']
+//      })
+//    ]
+//  }
 }
